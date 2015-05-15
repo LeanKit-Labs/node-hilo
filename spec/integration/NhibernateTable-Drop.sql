@@ -1,0 +1,4 @@
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'hibernate_unique_key')
+BEGIN
+	DROP TABLE [dbo].[hibernate_unique_key]
+END

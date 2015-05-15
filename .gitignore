@@ -20,3 +20,4 @@ public/css/app.css
 build-tmp/
 log/
 coverage/*
+intTestDbCfg.json

@@ -28,6 +28,7 @@
     "show-coverage": "open ./coverage/lcov-report/index.html"
   },
   "dependencies": {
+    "big-integer": "^1.4.4",
     "lodash": "3.x",
     "machina": "^1.0.0",
     "when": "^3.7.3"
@@ -47,6 +48,7 @@
     "jshint-stylish": "^1.0.1",
     "mocha": "^2.1.0",
     "open": "0.0.5",
+    "processhost": "^0.2.1",
     "proxyquire": "^1.4.0",
     "seriate": "^0.3.6",
     "sinon": "~1.11.0",

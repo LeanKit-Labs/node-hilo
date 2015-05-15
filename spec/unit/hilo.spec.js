@@ -1,29 +1,5 @@
 describe( "node-hilo - unit tests", function() {
 	describe( "generated unit tests", function() {
-		function getIds( cnt, hilo ) {
-			var p = [];
-			var idx = 0;
-			while ( idx < cnt ) {
-				p.push( hilo.nextId() );
-				idx++;
-			}
-			return when.all( p );
-		}
-
-		function getExpected( cnt, startIdx ) {
-			var expected = [];
-			var idx = 0;
-			if(startIdx.equals(0)) {
-				startIdx = startIdx.add(1);
-			}
-			while ( idx < cnt ) {
-				expected.push( startIdx.toString() );
-				startIdx = startIdx.add( 1 );
-				idx++;
-			}
-			return expected;
-		}
-
 		var hivals = [ "0", "1", "10", "100", "1000", "10000", "100000", "1000000", "10000000", "100000000", "1000000000" ].map( function( x ) {
 			return bigInt( x, 10 );
 		} );
@@ -63,7 +39,7 @@ describe( "node-hilo - unit tests", function() {
 	} );
 
 	describe( "when the DB call for next hival fails", function() {
-		describe("with an exception provided", function() {
+		describe( "with an exception provided", function() {
 			var hilo, hival;
 			beforeEach( function() {
 				var stubiate = {
@@ -75,10 +51,10 @@ describe( "node-hilo - unit tests", function() {
 				hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10 } } );
 			} );
 			it( "should reject", function() {
-				return hilo.nextId().should.be.rejectedWith(/Databass not OK/);
+				return hilo.nextId().should.be.rejectedWith( /Databass not OK/ );
 			} );
-		});
-		describe("with no exception provided", function() {
+		} );
+		describe( "with no exception provided", function() {
 			var hilo, hival;
 			beforeEach( function() {
 				var stubiate = {
@@ -91,9 +67,9 @@ describe( "node-hilo - unit tests", function() {
 			} );
 			it( "should reject", function() {
 				exception = undefined;
-				return hilo.nextId().should.be.rejectedWith(/An unknown error has occurred/);
+				return hilo.nextId().should.be.rejectedWith( /An unknown error has occurred/ );
 			} );
-		});
+		} );
 	} );
 
 	describe( "when the DB doesn't return a valid hival", function() {
@@ -111,17 +87,17 @@ describe( "node-hilo - unit tests", function() {
 
 		it( "should reject if an empty string is returned", function() {
 			dbHival = "";
-			return hilo.nextId().should.be.rejectedWith(/Invalid hival returned from database/);
+			return hilo.nextId().should.be.rejectedWith( /Invalid hival returned from database/ );
 		} );
 
 		it( "should reject if an undefined is returned", function() {
 			dbHival = undefined;
-			return hilo.nextId().should.be.rejectedWith(/Invalid hival returned from database/);
+			return hilo.nextId().should.be.rejectedWith( /Invalid hival returned from database/ );
 		} );
 
 		it( "should reject if an null is returned", function() {
 			dbHival = null;
-			return hilo.nextId().should.be.rejectedWith(/Invalid hival returned from database/);
+			return hilo.nextId().should.be.rejectedWith( /Invalid hival returned from database/ );
 		} );
 	} );
 } );

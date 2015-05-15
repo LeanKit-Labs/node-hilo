@@ -4,6 +4,8 @@ var istanbul = require( "gulp-istanbul" );
 var open = require( "open" ); //jshint ignore:line
 var allSrcFiles = "./src/**/*.js";
 var allTestFiles = "./spec/**/*.spec.js";
+var unitTestFiles = "./spec/unit/**/*.spec.js";
+var intTestFiles = "./spec/integration/**/*.spec.js";
 var gulpMocha = require( "gulp-spawn-mocha" );
 var gutil = require( "gulp-util" );
 
@@ -20,6 +22,14 @@ function runMocha( singleRun, files ) {
 			}
 		} );
 }
+
+gulp.task( "test-unit", [ "format" ], function() {
+	return runMocha( true, unitTestFiles );
+} );
+
+gulp.task( "test-int", [ "format" ], function() {
+	return runMocha( true, intTestFiles );
+} );
 
 gulp.task( "test", [ "format" ], function() {
 	return runMocha( true, allTestFiles );

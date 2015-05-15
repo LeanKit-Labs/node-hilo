@@ -54,7 +54,31 @@ If you'd like to learn more about the hi/lo algorithm:
 
 ## Tests, etc
 
-* `gulp test` to run tests
+If you plan to run the integration tests, you will need access to an MS SQL server. Create a test database that can be used (the integration tests create two tables), and save a configuration file called `intTestDbCfg.json` under the `spec/integration` folder. Your configuration file will look similar to this:
+
+```javascript
+{
+	"sql": {
+		"user": "dbuser",
+		"password": "dbuserpwd",
+		"server": "localhost",
+		"database": "nhutil"
+	},
+	"hilo": {
+		"maxLo": 100
+	},
+	"test" : {
+		"recordsToCreate" : 15000,
+		"startingHiVal" : "314159265"
+	}
+}
+```
+
+I recommend copying the following into a local file by that name and updating the `sql` information, leaving the rest alone.
+
+* `gulp test-unit` to run unit tests
+* `gulp test-int` to run integration tests (warning, this take much longer than unit tests!)
+* `gulp test` to run all tests
 * `gulp coverage` to run instanbul in the console
 * `npm run coverage` to open the web istanbul report
 * `gulp format` to run JSCS formatting rules
