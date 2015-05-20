@@ -95,7 +95,9 @@
 		"_",
 		"should",
 		"getHiloInstance",
-		"bigInt"
+		"bigInt",
+		"getIds",
+		"getExpected"
 	],
 
 	// LEGACY

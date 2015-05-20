@@ -72,8 +72,13 @@ module.exports = function( seriate, config ) {
 		initialize: function() {
 			this.maxLo = config.hilo.maxLo;
 			this.getNextHival = function() {
-				return seriate.first( config.sql, {
+				return seriate.executeTransaction( config.sql, {
 					preparedSql: seriate.fromFile( "./sql/nexthi.sql" )
+				} ).then( function( data ) {
+					return data.transaction.commit()
+						.then( function() {
+							return when( data.sets.__result__[0] );
+						} );
 				} );
 			};
 		}

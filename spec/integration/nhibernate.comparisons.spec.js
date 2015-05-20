@@ -1,3 +1,4 @@
+/*jshint -W106 */
 var processes = require( "processhost" )();
 var seriate = require( "seriate" );
 
@@ -15,10 +16,14 @@ describe( "node-hilo integration tests", function() {
 				before( function() {
 					hival = bigInt( comparison.hival );
 					var stubiate = {
-						first: function() {
-							var val = { next_hi: hival.toString() };
-							hival = hival.add( 1 );
-							return when( val );
+						executeTransaction: function() {
+							return {
+								then: function() {
+									var val = { next_hi: hival.toString() };
+									hival = hival.add( 1 );
+									return when( val );
+								}
+							};
 						},
 						fromFile: function() {}
 					};
@@ -36,6 +41,7 @@ describe( "node-hilo integration tests", function() {
 	describe( "when multiple hilo clients are writing against a database (be patient, this could take a bit!)", function() {
 		var nodeClient, cfg;
 		before( function() {
+			this.timeout( 600000 );
 			nodeClient = {
 				command: "node",
 				args: [ "./spec/integration/testClient.js" ],
@@ -45,7 +51,7 @@ describe( "node-hilo integration tests", function() {
 			};
 			cfg = require( "./intTestDbCfg.json" );
 			return when.promise( function( resolve, reject ) {
-				seriate.getPlainContext( cfg.sql )
+				seriate.getTransactionContext( cfg.sql )
 					.step( "drop-hibernate_unique_key", {
 						query: seriate.fromFile( "./NhibernateTable-Drop.sql" )
 					} )
@@ -67,8 +73,9 @@ describe( "node-hilo integration tests", function() {
 							}
 						}
 					} )
-					.end( function( sets ) {
-						resolve();
+					.end( function( result ) {
+						result.transaction.commit()
+							.then( resolve, reject );
 					} )
 					.error( function( err ) {
 						reject( err );
