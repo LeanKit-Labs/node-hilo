@@ -4,6 +4,9 @@
   "homepage": "https://github.com/LeanKit-Labs/node-hilo",
   "description": "NHibernate-style hi/lo ID generator for node.js & SQL Server",
   "author": "Jim Cowart",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/LeanKit-Labs/node-hilo.git"
