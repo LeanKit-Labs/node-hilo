@@ -67,7 +67,7 @@
     }
   ],
   "files": [
-    "lib",
+    "src",
     "LICENSE"
   ]
 }
