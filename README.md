@@ -76,11 +76,8 @@ If you plan to run the integration tests, you will need access to an MS SQL serv
 
 I recommend copying the following into a local file by that name and updating the `sql` information, leaving the rest alone.
 
-* `gulp test-unit` to run unit tests
-* `gulp test-int` to run integration tests (warning, this take much longer than unit tests!)
-* `gulp test` to run all tests
-* `gulp coverage` to run instanbul in the console
-* `npm run coverage` to open the web istanbul report
-* `gulp format` to run JSCS formatting rules
-* `gulp jshint` to lint the code
-* `gulp watch` to start a file watcher that re-runs tests with each change.
+* `gulp` to run all specs
+* `gulp specs-behavior` to run only behavior specs
+* `gulp specs-int` to run only integration specs
+* `gulp coverage` to run specs with instanbul report in the console
+* `gulp show-coverage` to run specs and show the web istanbul report

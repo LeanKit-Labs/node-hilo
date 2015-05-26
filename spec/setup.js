@@ -5,7 +5,7 @@ global.should = chai.should();
 global.sinon = require( "sinon" );
 global.when = require( "when" );
 global.bigInt = require( "big-integer" );
-global.getHiloInstance = require( "../../src" );
+global.getHiloInstance = require( "../src" );
 
 global.getIds = function getIds( cnt, hilo ) {
 	var p = [];

@@ -1,13 +1,13 @@
-/*jshint -W106 */
+require( '../setup' );
 var processes = require( "processhost" )();
 var seriate = require( "seriate" );
 
 describe( "node-hilo integration tests", function() {
 	describe( "when compared to a range of 10k NHibernate-generated keys", function() {
 		var comparisons = [
-			{ file: "../helpers/nhibernate.hival0.json", hival: "0" },
-			{ file: "../helpers/nhibernate.hival10000.json", hival: "10000" },
-			{ file: "../helpers/nhibernate.hival_1trillion.json", hival: "1000000000000" }
+			{ file: "../data/nhibernate.hival0.json", hival: "0" },
+			{ file: "../data/nhibernate.hival10000.json", hival: "10000" },
+			{ file: "../data/nhibernate.hival_1trillion.json", hival: "1000000000000" }
 		];
 
 		comparisons.forEach( function( comparison ) {
