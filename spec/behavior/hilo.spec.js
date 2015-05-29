@@ -1,4 +1,4 @@
-require( '../setup' );
+require( "../setup" );
 
 describe( "node-hilo - unit tests", function() {
 	describe( "generated unit tests", function() {

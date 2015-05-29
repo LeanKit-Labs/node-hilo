@@ -1,4 +1,4 @@
-require( '../setup' );
+require( "../setup" );
 var processes = require( "processhost" )();
 var seriate = require( "seriate" );
 

@@ -41,11 +41,18 @@
     "chai": "^2.0.0",
     "chai-as-promised": "^5.0.0",
     "gulp": "^3.8.8",
+    "gulp-changed": "^1.2.1",
+    "gulp-jscs": "^1.6.0",
+    "gulp-jshint": "^1.11.0",
+    "jshint": "^2.7.0",
+    "jshint-stylish": "^2.0.0",
     "processhost": "^0.2.1",
     "proxyquire": "^1.4.0",
     "seriate": "^0.3.6",
     "sinon": "~1.11.0",
-    "sinon-chai": "^2.7.0"
+    "sinon-chai": "^2.7.0",
+    "stylish": "^0.6.0",
+    "stylus": "^0.51.1"
   },
   "engines": {
     "node": ">=0.10.0"

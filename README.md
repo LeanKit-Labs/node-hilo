@@ -81,3 +81,6 @@ I recommend copying the following into a local file by that name and updating th
 * `gulp specs-int` to run only integration specs
 * `gulp coverage` to run specs with instanbul report in the console
 * `gulp show-coverage` to run specs and show the web istanbul report
+* `gulp format` to run JSCS formatting rules
+* `gulp jshint` to lint the code
+
