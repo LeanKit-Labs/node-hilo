@@ -8,11 +8,11 @@ var allSrcFiles = "./src/**/*.js";
 
 gulp.task( "coverage", bg.withCoverage() );
 
-gulp.task( "specs-behavior", function() {
+gulp.task( "test-behavior", function() {
 	return bg.test( false, "./behavior/*.spec.js" );
 } );
 
-gulp.task( "specs-int", function() {
+gulp.task( "test-int", function() {
 	return bg.test( false, "./integration/*.spec.js" );
 } );
 
@@ -22,12 +22,12 @@ gulp.task( "coverage-watch", function() {
 
 gulp.task( "show-coverage", bg.showCoverage() );
 
-gulp.task( "continuous-specs", function() {
+gulp.task( "continuous-test", function() {
 	return bg.test();
 } );
 
-gulp.task( "specs-watch", function() {
-	bg.watch( [ "continuous-specs" ] );
+gulp.task( "test-watch", function() {
+	bg.watch( [ "continuous-test" ] );
 } );
 
 gulp.task( "test-and-exit", function() {
@@ -55,6 +55,6 @@ gulp.task( "jshint", function() {
 		.pipe( jshint.reporter( "fail" ) );
 } );
 
-gulp.task( "default", [ "coverage", "coverage-watch" ], function() {} );
-gulp.task( "specs", [ "continuous-specs", "specs-watch" ], function() {} );
+gulp.task( "default", [ "jshint", "format", "coverage", "coverage-watch" ], function() {} );
+gulp.task( "test", [ "continuous-tests", "test-watch" ], function() {} );
 gulp.task( "build", [ "test-and-exit" ] );

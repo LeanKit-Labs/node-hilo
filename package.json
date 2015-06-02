@@ -26,9 +26,7 @@
     "NHibernate"
   ],
   "scripts": {
-    "test": "gulp test",
-    "coverage": "gulp coverage",
-    "show-coverage": "open ./coverage/lcov-report/index.html"
+    "test": "gulp test"
   },
   "dependencies": {
     "big-integer": "^1.4.4",
