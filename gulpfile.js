@@ -6,7 +6,7 @@ var jshint = require( "gulp-jshint" );
 var stylish = require( "jshint-stylish" );
 var allSrcFiles = "./src/**/*.js";
 
-gulp.task( "coverage", bg.withCoverage() );
+gulp.task( "coverage", [ "format" ], bg.withCoverage() );
 
 gulp.task( "test-behavior", function() {
 	return bg.test( false, "./behavior/*.spec.js" );
@@ -55,6 +55,6 @@ gulp.task( "jshint", function() {
 		.pipe( jshint.reporter( "fail" ) );
 } );
 
-gulp.task( "default", [ "jshint", "format", "coverage", "coverage-watch" ], function() {} );
+gulp.task( "default", [ "coverage", "coverage-watch" ], function() {} );
 gulp.task( "test", [ "continuous-tests", "test-watch" ], function() {} );
 gulp.task( "build", [ "test-and-exit" ] );
