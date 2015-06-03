@@ -1,4 +1,5 @@
-/*jshint -W106 */
+require( "../setup" );
+
 describe( "node-hilo - unit tests", function() {
 	describe( "generated unit tests", function() {
 		var hivals = [ "0", "1", "10", "100", "1000", "10000", "100000", "1000000", "10000000", "100000000", "1000000000" ].map( function( x ) {
