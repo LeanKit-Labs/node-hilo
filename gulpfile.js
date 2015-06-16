@@ -1,4 +1,5 @@
 var gulp = require( "gulp" );
+var gutil = require( "gulp-util" );
 var bg = require( "biggulp" )( gulp );
 var jscs = require( "gulp-jscs" );
 var gulpChanged = require( "gulp-changed" );
@@ -40,6 +41,10 @@ gulp.task( "format", [ "jshint" ], function() {
 			configPath: ".jscsrc",
 			fix: true
 		} ) )
+		.on( "error", function( error ) {
+			gutil.log( gutil.colors.red( error.message ) );
+			this.end();
+		} )
 		.pipe( gulpChanged( ".", { hasChanged: gulpChanged.compareSha1Digest } ) )
 		.pipe( gulp.dest( "." ) );
 } );
