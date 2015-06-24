@@ -61,5 +61,5 @@ gulp.task( "jshint", function() {
 } );
 
 gulp.task( "default", [ "coverage", "coverage-watch" ], function() {} );
-gulp.task( "test", [ "continuous-tests", "test-watch" ], function() {} );
+gulp.task( "test", [ "continuous-test", "test-watch" ], function() {} );
 gulp.task( "build", [ "test-and-exit" ] );
