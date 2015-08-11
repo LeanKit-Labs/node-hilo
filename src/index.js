@@ -27,9 +27,15 @@ function processHiValResponse( hv ) {
 
 var HiLoFsm = machina.Fsm.extend( {
 
-	initialState: "acquiring",
+	initialState: "uninitialized",
 
 	states: {
+		uninitialized: {
+			nextId: function() {
+				this.deferUntilTransition();
+				this.transition( "acquiring" );
+			}
+		},
 		acquiring: {
 			_onEnter: function() {
 				this.getNextHival()
@@ -96,7 +102,7 @@ module.exports = function( seriate, config ) {
 		{
 			enumerable: true,
 			get: function() {
-				return hiloFsm.hival.toString();
+				return hiloFsm.hival && hiloFsm.hival.toString();
 			}
 		}
 	);
