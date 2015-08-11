@@ -51,9 +51,15 @@ describe( "node-hilo - unit tests", function() {
 						} );
 						it( "should return expected ids for the given range", function() {
 							return getIds( idCount, hilo ).then( function( ids ) {
-								spy.callCount.should.equal( Math.ceil( expCallCount ) );
 								ids.should.eql( getExpected( idCount, ( startHival.times( maxLoPlusOne ) ) ) );
-								hilo.hival.should.equal( startHival.add( expCallCount ).subtract( 1 ).toString() );
+
+								if ( idCount > 0 ) {
+									spy.callCount.should.equal( Math.ceil( expCallCount ) );
+									hilo.hival.should.equal( startHival.add( expCallCount ).subtract( 1 ).toString() );
+								} else {
+									spy.callCount.should.equal( 0 );
+									should.not.exist( hilo.hival );
+								}
 							} );
 						} );
 					} );
