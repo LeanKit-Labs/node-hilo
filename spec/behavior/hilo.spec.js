@@ -1,5 +1,34 @@
 require( "../setup" );
 
+function getDataStub( nextHiVal ) {
+	function generateStub() {
+		var hival = typeof nextHiVal === "function" ? nextHiVal() : nextHiVal.toString();
+		var dataStub = {
+			transaction: {
+				commit: function() {
+					return {
+						then: function( cb ) {
+							dataStub.sets.__result__ = [ { next_hi: hival } ];
+							return cb();
+						}
+					};
+				}
+			},
+			sets: {
+				__result__: [ ]
+			}
+		};
+
+		return dataStub;
+	}
+
+	return {
+		then: function( cb ) {
+			return cb( generateStub() );
+		}
+	};
+}
+
 describe( "node-hilo - unit tests", function() {
 	describe( "generated unit tests", function() {
 		var hivals = [ "0", "1", "10", "100", "1000", "10000", "100000", "1000000", "10000000", "100000000", "1000000000" ].map( function( x ) {
@@ -17,32 +46,13 @@ describe( "node-hilo - unit tests", function() {
 						before( function() {
 							hival = bigInt( startHival.toString() );
 							function getNextHiVal() {
-								var val = { next_hi: hival.toString() };
+								var val = hival.toString();
 								hival = hival.add( 1 );
 								return val;
 							}
-							var dataStub = {
-								transaction: {
-									commit: function() {
-										return {
-											then: function( cb ) {
-												dataStub.sets.__result__ = [ getNextHiVal() ];
-												return cb();
-											}
-										};
-									}
-								},
-								sets: {
-									__result__: [ ]
-								}
-							};
 							var stubiate = {
 								executeTransaction: function() {
-									return {
-										then: function( cb ) {
-											return cb( dataStub );
-										}
-									};
+									return getDataStub( getNextHiVal );
 								},
 								fromFile: function() {}
 							};
@@ -71,7 +81,7 @@ describe( "node-hilo - unit tests", function() {
 	describe( "when the DB call for next hival fails", function() {
 		describe( "with an exception provided", function() {
 			var hilo;
-			beforeEach( function() {
+			before( function() {
 				var stubiate = {
 					executeTransaction: function() {
 						return when.reject( new Error( "Databass not OK" ) );
@@ -84,9 +94,10 @@ describe( "node-hilo - unit tests", function() {
 				return hilo.nextId().should.be.rejectedWith( /Databass not OK/ );
 			} );
 		} );
+
 		describe( "with no exception provided", function() {
 			var hilo;
-			beforeEach( function() {
+			before( function() {
 				var stubiate = {
 					executeTransaction: function() {
 						return when.reject();
@@ -97,6 +108,42 @@ describe( "node-hilo - unit tests", function() {
 			} );
 			it( "should reject", function() {
 				return hilo.nextId().should.be.rejectedWith( /An unknown error has occurred/ );
+			} );
+		} );
+
+		describe( "with resetDelay of 100ms", function() {
+			var dbCalls = 0;
+			var hilo;
+
+			before( function() {
+				var stubiate = {
+					executeTransaction: function() {
+						// First call fails
+						return dbCalls++ ? getDataStub( 100000 ) : when.reject();
+					},
+					fromFile: function() {}
+				};
+				hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10, retryDelay: 100 } } );
+			} );
+
+			it( "should fail on first call", function() {
+				hilo.nextId().should.be.rejectedWith( /An unknown error has occurred/ );
+				dbCalls.should.equal( 1 );
+			} );
+
+			it( "should fail immediately if called again in less 100ms", function() {
+				hilo.nextId().should.be.rejectedWith( /An unknown error has occurred/ );
+				dbCalls.should.equal( 1 );
+			} );
+
+			it( "should succeed if called after 100ms", function( done ) {
+				setTimeout( function() {
+					hilo.nextId().then( function( id ) {
+						dbCalls.should.equal( 2 );
+						id.should.equal( "1100000" );
+						done();
+					}, done );
+				}, 101 );
 			} );
 		} );
 	} );

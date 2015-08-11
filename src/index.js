@@ -46,6 +46,15 @@ var HiLoFsm = machina.Fsm.extend( {
 			}
 		},
 		dbFailure: {
+			_onEnter: function() {
+				this.timer = setTimeout( function() {
+					this.handle( "clearErrorState" );
+				}.bind( this ), this.retryDelay );
+			},
+			clearErrorState: "uninitialized",
+			_onExit: function() {
+				clearTimeout( this.timer );
+			},
 			nextId: function( done ) {
 				done( this.err || new HiloGenerationError( "An unknown error has occurred." ) );
 			}
@@ -77,6 +86,7 @@ module.exports = function( seriate, config ) {
 	var hiloFsm = new HiLoFsm( {
 		initialize: function() {
 			this.maxLo = config.hilo.maxLo;
+			this.retryDelay = config.hilo.retryDelay || 30000;
 			this.getNextHival = function() {
 				return seriate.executeTransaction( config.sql, {
 					preparedSql: seriate.fromFile( "./sql/nexthi.sql" )
