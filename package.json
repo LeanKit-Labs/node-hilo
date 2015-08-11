@@ -1,6 +1,6 @@
 {
   "name": "node-hilo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/LeanKit-Labs/node-hilo",
   "description": "NHibernate-style hi/lo ID generator for node.js & SQL Server",
   "author": "Jim Cowart",
