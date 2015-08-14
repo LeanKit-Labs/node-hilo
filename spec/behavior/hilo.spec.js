@@ -1,6 +1,35 @@
 require( "../setup" );
 
-describe( "node-hilo - unit tests", function() {
+function getDataStub( nextHiVal ) {
+	function generateStub() {
+		var hival = typeof nextHiVal === "function" ? nextHiVal() : nextHiVal.toString();
+		var dataStub = {
+			transaction: {
+				commit: function() {
+					return {
+						then: function( cb ) {
+							dataStub.sets.__result__ = [ { next_hi: hival } ];
+							return cb();
+						}
+					};
+				}
+			},
+			sets: {
+				__result__: [ ]
+			}
+		};
+
+		return dataStub;
+	}
+
+	return {
+		then: function( cb ) {
+			return cb( generateStub() );
+		}
+	};
+}
+
+describe.only( "node-hilo - unit tests", function() {
 	describe( "generated unit tests", function() {
 		var hivals = [ "0", "1", "10", "100", "1000", "10000", "100000", "1000000", "10000000", "100000000", "1000000000" ].map( function( x ) {
 			return bigInt( x, 10 );
@@ -17,32 +46,13 @@ describe( "node-hilo - unit tests", function() {
 						before( function() {
 							hival = bigInt( startHival.toString() );
 							function getNextHiVal() {
-								var val = { next_hi: hival.toString() };
+								var val = hival.toString();
 								hival = hival.add( 1 );
 								return val;
 							}
-							var dataStub = {
-								transaction: {
-									commit: function() {
-										return {
-											then: function( cb ) {
-												dataStub.sets.__result__ = [ getNextHiVal() ];
-												return cb();
-											}
-										};
-									}
-								},
-								sets: {
-									__result__: [ ]
-								}
-							};
 							var stubiate = {
 								executeTransaction: function() {
-									return {
-										then: function( cb ) {
-											return cb( dataStub );
-										}
-									};
+									return getDataStub( getNextHiVal );
 								},
 								fromFile: function() {}
 							};
@@ -71,7 +81,7 @@ describe( "node-hilo - unit tests", function() {
 	describe( "when the DB call for next hival fails", function() {
 		describe( "with an exception provided", function() {
 			var hilo;
-			beforeEach( function() {
+			before( function() {
 				var stubiate = {
 					executeTransaction: function() {
 						return when.reject( new Error( "Databass not OK" ) );
@@ -84,9 +94,10 @@ describe( "node-hilo - unit tests", function() {
 				return hilo.nextId().should.be.rejectedWith( /Databass not OK/ );
 			} );
 		} );
+
 		describe( "with no exception provided", function() {
 			var hilo;
-			beforeEach( function() {
+			before( function() {
 				var stubiate = {
 					executeTransaction: function() {
 						return when.reject();
@@ -131,6 +142,112 @@ describe( "node-hilo - unit tests", function() {
 		it( "should reject if an null is returned", function() {
 			dbHival = null;
 			return hilo.nextId().should.be.rejectedWith( /Invalid hival returned from database/ );
+		} );
+	} );
+
+	describe( "when a DB failure is followed by success", function() {
+		var succeed = false;
+		var dbCalls = 0;
+		var hilo;
+
+		before( function() {
+			var stubiate = {
+				executeTransaction: function() {
+					dbCalls++;
+					return succeed ? getDataStub( 100000 ) : when.reject();
+				},
+				fromFile: function() {}
+			};
+			hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10 } } );
+		} );
+
+		it( "should double the retryDelay on failure", function() {
+			succeed = false;
+			return hilo.nextId().should.be.rejectedWith( /An unknown error has occurred/ ).then( function() {
+				hilo.retryDelay.should.equal( 2 );
+				dbCalls.should.equal( 1 );
+			} );
+		} );
+
+		it( "should reset the retryDelay on success", function( done ) {
+			succeed = true;
+			setTimeout( function() {
+				hilo.nextId().then( function( id ) {
+					hilo.retryDelay.should.equal( 1 );
+					dbCalls.should.equal( 2 );
+					id.should.equal( "1100000" );
+					done();
+				}, done );
+			}, hilo.retryDelay + 1 );
+		} );
+	} );
+
+	describe( "with DB consistently failing", function() {
+		var succeed = false;
+		var dbCalls = 0;
+		var hilo;
+
+		before( function() {
+			var stubiate = {
+				executeTransaction: function() {
+					dbCalls++;
+					return succeed ? getDataStub( 100000 ) : when.reject();
+				},
+				fromFile: function() {}
+			};
+			hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10, maxRetryDelay: 100 } } );
+		} );
+
+		it( "should double the retryDelay on failure", function( done ) {
+			succeed = false;
+			var call = 0;
+			function tryNextId() {
+				call++;
+				hilo.nextId().should.be.rejectedWith( /An unknown error has occurred/ ).then( function() {
+					hilo.retryDelay.should.equal( Math.pow( 2, call ) );
+					dbCalls.should.equal( call );
+
+					// First 6 failures should take us to a retryDelay of 64ms
+					if ( call < 6 ) {
+						setTimeout( tryNextId, hilo.retryDelay + 1 );
+					} else {
+						done();
+					}
+				}, done );
+			}
+			tryNextId();
+		} );
+
+		it( "should cap retryDelay at maxRetryDelay", function( done ) {
+			succeed = false;
+			setTimeout( function() {
+				hilo.nextId().should.be.rejectedWith( /An unknown error has occurred/ ).then( function() {
+					// 7th call would have bumped us to 128ms without a maxRetryDelay of 100
+					hilo.retryDelay.should.equal( 100 );
+					dbCalls.should.equal( 7 );
+					done();
+				}, done );
+			}, hilo.retryDelay + 1 );
+		} );
+
+		it( "should fail without hitting DB if called before retryDelay expires", function() {
+			succeed = true;
+			return hilo.nextId().should.be.rejectedWith( /An unknown error has occurred/ ).then( function() {
+				hilo.retryDelay.should.equal( 100 );
+				dbCalls.should.equal( 7 );
+			} );
+		} );
+
+		it( "should recover after retryDelay expires", function( done ) {
+			succeed = true;
+			setTimeout( function() {
+				hilo.nextId().then( function( id ) {
+					hilo.retryDelay.should.equal( 1 );
+					dbCalls.should.equal( 8 );
+					id.should.equal( "1100000" );
+					done();
+				}, done );
+			}, hilo.retryDelay + 1 );
 		} );
 	} );
 } );

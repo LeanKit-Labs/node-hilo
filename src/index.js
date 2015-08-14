@@ -22,6 +22,7 @@ function processHiValResponse( hv ) {
 	this.hival = bigInt( hv.next_hi );
 	this.lo = ( this.hival.equals( 0 ) ) ? 1 : 0;
 	this.hi = this.hival.times( this.maxLo + 1 );
+	this.retryDelay = 1;
 	this.transition( "ready" );
 }
 
@@ -46,6 +47,16 @@ var HiLoFsm = machina.Fsm.extend( {
 			}
 		},
 		dbFailure: {
+			_onEnter: function() {
+				this.timer = setTimeout( function() {
+					this.handle( "clearErrorState" );
+				}.bind( this ), this.retryDelay );
+				this.retryDelay = Math.min( this.retryDelay * 2, this.maxRetryDelay );
+			},
+			clearErrorState: "uninitialized",
+			_onExit: function() {
+				clearTimeout( this.timer );
+			},
 			nextId: function( done ) {
 				done( this.err || new HiloGenerationError( "An unknown error has occurred." ) );
 			}
@@ -77,6 +88,8 @@ module.exports = function( seriate, config ) {
 	var hiloFsm = new HiLoFsm( {
 		initialize: function() {
 			this.maxLo = config.hilo.maxLo;
+			this.maxRetryDelay = config.hilo.maxRetryDelay || 5000;
+			this.retryDelay = 1;
 			this.getNextHival = function() {
 				return seriate.executeTransaction( config.sql, {
 					preparedSql: seriate.fromFile( "./sql/nexthi.sql" )
@@ -96,16 +109,19 @@ module.exports = function( seriate, config ) {
 		}
 	};
 
-	Object.defineProperty(
-		hilo,
-		"hival",
-		{
-			enumerable: true,
-			get: function() {
-				return hiloFsm.hival && hiloFsm.hival.toString();
-			}
+	Object.defineProperty( hilo, "hival", {
+		enumerable: true,
+		get: function() {
+			return hiloFsm.hival && hiloFsm.hival.toString();
 		}
-	);
+	} );
+
+	Object.defineProperty( hilo, "retryDelay", {
+		enumerable: true,
+		get: function() {
+			return hiloFsm.retryDelay;
+		}
+	} );
 
 	return hilo;
 };
