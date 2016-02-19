@@ -19,7 +19,7 @@ describe( "node-hilo integration tests", function() {
 						executeTransaction: function() {
 							return {
 								then: function() {
-									var val = { next_hi: hival.toString() };
+									var val = { next_hi: hival.toString() }; // jshint ignore:line
 									hival = hival.add( 1 );
 									return when( val );
 								}
@@ -32,7 +32,7 @@ describe( "node-hilo integration tests", function() {
 				it( "should match nhibernate's keys exactly", function() {
 					this.timeout( 20000 );
 					return getIds( 10000, hilo ).then( function( ids ) {
-						ids.should.eql( require( comparison.file ).nhibernate_keys );
+						ids.should.eql( require( comparison.file ).nhibernate_keys ); // jshint ignore:line
 					} );
 				} );
 			} );
