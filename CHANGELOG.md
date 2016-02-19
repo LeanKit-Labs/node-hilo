@@ -1,4 +1,6 @@
-## 0.1.x
+## 1.0.0
+* Made the hilo table name configurable.
+* Updated to biggulp 0.2.0
 
 ### 0.1.2
 
