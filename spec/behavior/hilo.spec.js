@@ -30,6 +30,24 @@ function getDataStub( nextHiVal ) {
 }
 
 describe.only( "node-hilo - unit tests", function() {
+	describe( "when using a custom hilo table", function() {
+		var hilo;
+		before( function() {
+			seriate.executeTransaction = sinon.stub( seriate, "executeTransaction" ).resolves( getDataStub( 100 ) );
+			hilo = getHiloInstance( seriate, { hilo: { maxLo: 10, table: "dbo.HILO_TABLE" } } );
+			return hilo.nextId();
+		} );
+
+		it( "should call execute with the correct sql query", function() {
+			var sql = seriate.executeTransaction.getCall( 0 ).args[ 1 ].preparedSql;
+			sql.should.equal( "\nSELECT [next_hi]\nFROM dbo.HILO_TABLE WITH(rowlock,updlock);\nUPDATE dbo.HILO_TABLE\nSET [next_hi] = [next_hi] + 1\n" );
+		} );
+
+		after( function() {
+			seriate.executeTransaction.restore();
+		} );
+	} );
+
 	describe( "generated unit tests", function() {
 		var hivals = [ "0", "1", "10", "100", "1000", "10000", "100000", "1000000", "10000000", "100000000", "1000000000" ].map( function( x ) {
 			return bigInt( x, 10 );

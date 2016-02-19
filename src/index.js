@@ -2,6 +2,7 @@ var when = require( "when" );
 var machina = require( "machina" );
 var bigInt = require( "big-integer" );
 var util = require( "util" );
+var _ = require( "lodash" );
 
 function HiloGenerationError() {
 	this.message = util.format.apply( null, arguments );
@@ -90,9 +91,15 @@ module.exports = function( seriate, config ) {
 			this.maxLo = config.hilo.maxLo;
 			this.maxRetryDelay = config.hilo.maxRetryDelay || 5000;
 			this.retryDelay = 1;
+			this.table = config.hilo.table || "dbo.hibernate_unique_key";
+
+			var preparedSql = _.template( seriate.fromFile( "./sql/nexthi.sql" ) )( {
+				TABLE: this.table
+			} );
+
 			this.getNextHival = function() {
 				return seriate.executeTransaction( config.sql, {
-					preparedSql: seriate.fromFile( "./sql/nexthi.sql" )
+					preparedSql: preparedSql
 				} ).then( function( data ) {
 					return data.transaction.commit()
 						.then( function() {
