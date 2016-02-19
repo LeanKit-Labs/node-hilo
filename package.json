@@ -1,74 +1,70 @@
 {
-  "name": "node-hilo",
-  "version": "0.1.2",
-  "homepage": "https://github.com/LeanKit-Labs/node-hilo",
-  "description": "NHibernate-style hi/lo ID generator for node.js & SQL Server",
-  "author": "Jim Cowart",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/LeanKit-Labs/node-hilo.git"
-  },
-  "contributors": [
-    {
-      "name": "Jim Cowart",
-      "email": "jim@ifandelse.com",
-      "url": "http://ifandelse.com"
+    "name": "node-hilo",
+    "version": "0.1.2",
+    "homepage": "https://github.com/LeanKit-Labs/node-hilo",
+    "description": "NHibernate-style hi/lo ID generator for node.js & SQL Server",
+    "author": "Jim Cowart",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org"
     },
-    {
-      "name": "Matt Dunlap",
-      "email": "matt.dunlap@leankit.com",
-      "url": "https://github.com/prestaul"
-    }
-  ],
-  "main": "./src/index.js",
-  "keywords": [
-    "hilo",
-    "hi-lo",
-    "hi/lo",
-    "NHibernate"
-  ],
-  "scripts": {
-    "test": "gulp test"
-  },
-  "dependencies": {
-    "big-integer": "^1.4.4",
-    "lodash": "3.x",
-    "machina": "^1.0.0",
-    "when": "^3.7.3"
-  },
-  "devDependencies": {
-    "biggulp": "0.0.4",
-    "chai": "^2.0.0",
-    "chai-as-promised": "^5.0.0",
-    "gulp": "^3.8.8",
-    "gulp-changed": "^1.2.1",
-    "gulp-jscs": "^1.6.0",
-    "gulp-jshint": "^1.11.0",
-    "gulp-util": "~3.0.5",
-    "jshint": "^2.7.0",
-    "jshint-stylish": "^2.0.0",
-    "processhost": "^0.2.1",
-    "proxyquire": "^1.4.0",
-    "seriate": "^0.3.6",
-    "sinon": "~1.11.0",
-    "sinon-chai": "^2.7.0",
-    "stylish": "^0.6.0",
-    "stylus": "^0.51.1"
-  },
-  "engines": {
-    "node": ">=0.10.0"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://opensource.org/licenses/MIT"
-    }
-  ],
-  "files": [
-    "src",
-    "LICENSE"
-  ]
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/LeanKit-Labs/node-hilo.git"
+    },
+    "contributors": [{
+        "name": "Jim Cowart",
+        "email": "jim@ifandelse.com",
+        "url": "http://ifandelse.com"
+    }, {
+        "name": "Matt Dunlap",
+        "email": "matt.dunlap@leankit.com",
+        "url": "https://github.com/prestaul"
+    }],
+    "main": "./src/index.js",
+    "keywords": [
+        "hilo",
+        "hi-lo",
+        "hi/lo",
+        "NHibernate"
+    ],
+    "scripts": {
+        "test": "gulp test"
+    },
+    "dependencies": {
+        "big-integer": "^1.4.4",
+        "lodash": "3.x",
+        "machina": "^1.0.0",
+        "when": "^3.7.3"
+    },
+    "devDependencies": {
+        "biggulp": "^0.2.0",
+        "chai": "^2.0.0",
+        "chai-as-promised": "^5.0.0",
+        "gulp": "^3.8.8",
+        "gulp-changed": "^1.2.1",
+        "gulp-jscs": "^1.6.0",
+        "gulp-jshint": "^1.11.0",
+        "gulp-util": "~3.0.5",
+        "jshint": "^2.7.0",
+        "jshint-stylish": "^2.0.0",
+        "processhost": "^0.2.1",
+        "proxyquire": "^1.4.0",
+        "seriate": "^0.3.6",
+        "sinon": "~1.11.0",
+        "sinon-as-promised": "^4.0.0",
+        "sinon-chai": "^2.7.0",
+        "stylish": "^0.6.0",
+        "stylus": "^0.51.1"
+    },
+    "engines": {
+        "node": ">=0.10.0"
+    },
+    "licenses": [{
+        "type": "MIT",
+        "url": "http://opensource.org/licenses/MIT"
+    }],
+    "files": [
+        "src",
+        "LICENSE"
+    ]
 }

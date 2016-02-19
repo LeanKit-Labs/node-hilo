@@ -1,5 +1,5 @@
 require( "../setup" );
-
+var seriate = require( "seriate" );
 function getDataStub( nextHiVal ) {
 	function generateStub() {
 		var hival = typeof nextHiVal === "function" ? nextHiVal() : nextHiVal.toString();
@@ -8,7 +8,7 @@ function getDataStub( nextHiVal ) {
 				commit: function() {
 					return {
 						then: function( cb ) {
-							dataStub.sets.__result__ = [ { next_hi: hival } ];
+							dataStub.sets.__result__ = [ { next_hi: hival } ]; // jshint ignore:line
 							return cb();
 						}
 					};
@@ -68,15 +68,18 @@ describe.only( "node-hilo - unit tests", function() {
 								hival = hival.add( 1 );
 								return val;
 							}
+
 							var stubiate = {
 								executeTransaction: function() {
 									return getDataStub( getNextHiVal );
 								},
+
 								fromFile: function() {}
 							};
 							spy = sinon.spy( stubiate, "executeTransaction" );
 							hilo = getHiloInstance( stubiate, { hilo: { maxLo: maxLo } } );
 						} );
+
 						it( "should return expected ids for the given range", function() {
 							return getIds( idCount, hilo ).then( function( ids ) {
 								ids.should.eql( getExpected( idCount, ( startHival.times( maxLoPlusOne ) ) ) );
@@ -104,10 +107,12 @@ describe.only( "node-hilo - unit tests", function() {
 					executeTransaction: function() {
 						return when.reject( new Error( "Databass not OK" ) );
 					},
+
 					fromFile: function() {}
 				};
 				hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10 } } );
 			} );
+
 			it( "should reject", function() {
 				return hilo.nextId().should.be.rejectedWith( /Databass not OK/ );
 			} );
@@ -120,10 +125,12 @@ describe.only( "node-hilo - unit tests", function() {
 					executeTransaction: function() {
 						return when.reject();
 					},
+
 					fromFile: function() {}
 				};
 				hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10 } } );
 			} );
+
 			it( "should reject", function() {
 				return hilo.nextId().should.be.rejectedWith( /An unknown error has occurred/ );
 			} );
@@ -137,10 +144,11 @@ describe.only( "node-hilo - unit tests", function() {
 				executeTransaction: function() {
 					return {
 						then: function() {
-							return when( { next_hi: dbHival } );
+							return when( { next_hi: dbHival } ); // jshint ignore:line
 						}
 					};
 				},
+
 				fromFile: function() {}
 			};
 			spy = sinon.spy( stubiate, "executeTransaction" );
@@ -174,6 +182,7 @@ describe.only( "node-hilo - unit tests", function() {
 					dbCalls++;
 					return succeed ? getDataStub( 100000 ) : when.reject();
 				},
+
 				fromFile: function() {}
 			};
 			hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10 } } );
@@ -211,6 +220,7 @@ describe.only( "node-hilo - unit tests", function() {
 					dbCalls++;
 					return succeed ? getDataStub( 100000 ) : when.reject();
 				},
+
 				fromFile: function() {}
 			};
 			hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10, maxRetryDelay: 100 } } );
@@ -233,6 +243,7 @@ describe.only( "node-hilo - unit tests", function() {
 					}
 				}, done );
 			}
+
 			tryNextId();
 		} );
 

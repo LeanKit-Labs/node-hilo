@@ -85,6 +85,7 @@
 
 	"predef" : [  // Custom globals.
 		"before",
+		"after",
 		"beforeEach",
 		"define",
 		"describe",
