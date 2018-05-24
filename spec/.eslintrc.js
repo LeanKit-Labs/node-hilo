@@ -14,7 +14,6 @@ module.exports = {
 		should: true,
 		getIds: true,
 		getExpected: true,
-		getHiloInstance: true,
-		when: true
+		getHiloInstance: true
 	}
 };

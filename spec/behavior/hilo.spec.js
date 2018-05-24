@@ -9,7 +9,7 @@ function getDataStub( nextHiVal ) {
 					return {
 						then( cb ) {
 							dataStub.sets.__result__ = [ { next_hi: hival } ]; // eslint-disable-line camelcase
-							return cb();
+							return Promise.resolve( cb() );
 						}
 					};
 				}
@@ -105,7 +105,7 @@ describe.only( "node-hilo - unit tests", function() {
 			before( function() {
 				const stubiate = {
 					executeTransaction() {
-						return when.reject( new Error( "Databass not OK" ) );
+						return Promise.reject( new Error( "Databass not OK" ) );
 					},
 
 					fromFile() {}
@@ -123,7 +123,7 @@ describe.only( "node-hilo - unit tests", function() {
 			before( function() {
 				const stubiate = {
 					executeTransaction() {
-						return when.reject();
+						return Promise.reject();
 					},
 
 					fromFile() {}
@@ -144,7 +144,7 @@ describe.only( "node-hilo - unit tests", function() {
 				executeTransaction() {
 					return {
 						then() {
-							return when( { next_hi: dbHival } ); // eslint-disable-line camelcase
+							return Promise.resolve( { next_hi: dbHival } ); // eslint-disable-line camelcase
 						}
 					};
 				},
@@ -180,7 +180,7 @@ describe.only( "node-hilo - unit tests", function() {
 			const stubiate = {
 				executeTransaction() {
 					dbCalls++;
-					return succeed ? getDataStub( 100000 ) : when.reject();
+					return succeed ? getDataStub( 100000 ) : Promise.reject();
 				},
 
 				fromFile() {}
@@ -218,7 +218,7 @@ describe.only( "node-hilo - unit tests", function() {
 			const stubiate = {
 				executeTransaction() {
 					dbCalls++;
-					return succeed ? getDataStub( 100000 ) : when.reject();
+					return succeed ? getDataStub( 100000 ) : Promise.reject();
 				},
 
 				fromFile() {}

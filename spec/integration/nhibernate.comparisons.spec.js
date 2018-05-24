@@ -21,7 +21,7 @@ describe( "node-hilo integration tests", function() {
 								then() {
 									const val = { next_hi: hival.toString() }; // eslint-disable-line camelcase
 									hival = hival.add( 1 );
-									return when( val );
+									return Promise.resolve( val );
 								}
 							};
 						},
@@ -50,7 +50,7 @@ describe( "node-hilo integration tests", function() {
 				restart: false
 			};
 			cfg = require( "./intTestDbCfg.json" );
-			return when.promise( function( resolve, reject ) {
+			return new Promise( function( resolve, reject ) {
 				seriate.getTransactionContext( cfg.sql )
 					.step( "drop-hibernate_unique_key", {
 						query: seriate.fromFile( "./NhibernateTable-Drop.sql" )

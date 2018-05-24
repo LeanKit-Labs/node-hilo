@@ -4,7 +4,6 @@ chai.use( require( "chai-as-promised" ) );
 global.should = chai.should();
 global.sinon = require( "sinon" );
 require( "sinon-as-promised" );
-global.when = require( "when" );
 global.bigInt = require( "big-integer" );
 global.getHiloInstance = require( "../src" );
 
@@ -15,7 +14,7 @@ global.getIds = function getIds( cnt, hilo ) {
 		p.push( hilo.nextId() );
 		idx++;
 	}
-	return when.all( p );
+	return Promise.all( p );
 };
 
 global.getExpected = function getExpected( cnt, startIdx ) {

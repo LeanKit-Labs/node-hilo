@@ -42,8 +42,7 @@
     "dependencies": {
         "big-integer": "^1.4.4",
         "lodash": "3.x",
-        "machina": "^1.0.0",
-        "when": "^3.7.3"
+        "machina": "^1.0.0"
     },
     "devDependencies": {
         "chai": "^2.0.0",

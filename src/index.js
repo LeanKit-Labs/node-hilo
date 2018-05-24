@@ -1,4 +1,3 @@
-var when = require( "when" );
 var machina = require( "machina" );
 var bigInt = require( "big-integer" );
 var util = require( "util" );
@@ -74,7 +73,7 @@ var HiLoFsm = machina.Fsm.extend( {
 	},
 
 	nextId() {
-		return when.promise( function( resolve, reject ) {
+		return new Promise( function( resolve, reject ) {
 			this.handle( "nextId", function( err, val ) {
 				if ( err ) {
 					return reject( err );
@@ -103,7 +102,7 @@ module.exports = function( seriate, config ) {
 				} ).then( function( data ) {
 					return data.transaction.commit()
 						.then( function() {
-							return when( data.sets.__result__[ 0 ] );
+							return data.sets.__result__[ 0 ];
 						} );
 				} );
 			};
