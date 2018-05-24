@@ -41,7 +41,7 @@
     },
     "dependencies": {
         "big-integer": "^1.4.4",
-        "lodash": "3.x",
+        "lodash": "^4.17.10",
         "machina": "^1.0.0"
     },
     "devDependencies": {
