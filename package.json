@@ -42,7 +42,7 @@
     "dependencies": {
         "big-integer": "^1.4.4",
         "lodash": "^4.17.10",
-        "machina": "^1.0.0"
+        "machina": "^2.0.2"
     },
     "devDependencies": {
         "chai": "^4.1.2",
