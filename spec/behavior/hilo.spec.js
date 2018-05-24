@@ -2,13 +2,13 @@ require( "../setup" );
 var seriate = require( "seriate" );
 function getDataStub( nextHiVal ) {
 	function generateStub() {
-		var hival = typeof nextHiVal === "function" ? nextHiVal() : nextHiVal.toString();
+		const hival = typeof nextHiVal === "function" ? nextHiVal() : nextHiVal.toString();
 		var dataStub = {
 			transaction: {
-				commit: function() {
+				commit() {
 					return {
-						then: function( cb ) {
-							dataStub.sets.__result__ = [ { next_hi: hival } ]; // jshint ignore:line
+						then( cb ) {
+							dataStub.sets.__result__ = [ { next_hi: hival } ]; // eslint-disable-line camelcase
 							return cb();
 						}
 					};
@@ -23,7 +23,7 @@ function getDataStub( nextHiVal ) {
 	}
 
 	return {
-		then: function( cb ) {
+		then( cb ) {
 			return cb( generateStub() );
 		}
 	};
@@ -31,7 +31,7 @@ function getDataStub( nextHiVal ) {
 
 describe.only( "node-hilo - unit tests", function() {
 	describe( "when using a custom hilo table", function() {
-		var hilo;
+		let hilo;
 		before( function() {
 			seriate.executeTransaction = sinon.stub( seriate, "executeTransaction" ).resolves( getDataStub( 100 ) );
 			hilo = getHiloInstance( seriate, { hilo: { maxLo: 10, table: "dbo.HILO_TABLE" } } );
@@ -39,7 +39,7 @@ describe.only( "node-hilo - unit tests", function() {
 		} );
 
 		it( "should call execute with the correct sql query", function() {
-			var sql = seriate.executeTransaction.getCall( 0 ).args[ 1 ].preparedSql;
+			const sql = seriate.executeTransaction.getCall( 0 ).args[ 1 ].preparedSql;
 			sql.should.equal( "\nSELECT [next_hi]\nFROM dbo.HILO_TABLE WITH(rowlock,updlock);\nUPDATE dbo.HILO_TABLE\nSET [next_hi] = [next_hi] + 1\n" );
 		} );
 
@@ -49,35 +49,35 @@ describe.only( "node-hilo - unit tests", function() {
 	} );
 
 	describe( "generated unit tests", function() {
-		var hivals = [ "0", "1", "10", "100", "1000", "10000", "100000", "1000000", "10000000", "100000000", "1000000000" ].map( function( x ) {
+		const hivals = [ "0", "1", "10", "100", "1000", "10000", "100000", "1000000", "10000000", "100000000", "1000000000" ].map( function( x ) {
 			return bigInt( x, 10 );
 		} );
 
 		hivals.forEach( function( startHival ) {
-			describe( "when hival starts at " + startHival, function() {
+			describe( `when hival starts at ${ startHival }`, function() {
 				[ 0, 1, 3, 5, 10, 100 ].forEach( function( maxLo ) {
-					describe( "with a maxLo of " + maxLo, function() {
-						var hilo, hival, spy;
-						var idCount = maxLo * 10;
-						var maxLoPlusOne = maxLo + 1;
-						var expCallCount = Math.ceil( idCount / maxLoPlusOne ) + ( idCount % maxLoPlusOne === 0 ? 1 : 0 );
+					describe( `with a maxLo of ${ maxLo }`, function() {
+						let hilo, hival, spy;
+						const idCount = maxLo * 10;
+						const maxLoPlusOne = maxLo + 1;
+						const expCallCount = Math.ceil( idCount / maxLoPlusOne ) + ( idCount % maxLoPlusOne === 0 ? 1 : 0 );
 						before( function() {
 							hival = bigInt( startHival.toString() );
 							function getNextHiVal() {
-								var val = hival.toString();
+								const val = hival.toString();
 								hival = hival.add( 1 );
 								return val;
 							}
 
-							var stubiate = {
-								executeTransaction: function() {
+							const stubiate = {
+								executeTransaction() {
 									return getDataStub( getNextHiVal );
 								},
 
-								fromFile: function() {}
+								fromFile() {}
 							};
 							spy = sinon.spy( stubiate, "executeTransaction" );
-							hilo = getHiloInstance( stubiate, { hilo: { maxLo: maxLo } } );
+							hilo = getHiloInstance( stubiate, { hilo: { maxLo } } );
 						} );
 
 						it( "should return expected ids for the given range", function() {
@@ -101,14 +101,14 @@ describe.only( "node-hilo - unit tests", function() {
 
 	describe( "when the DB call for next hival fails", function() {
 		describe( "with an exception provided", function() {
-			var hilo;
+			let hilo;
 			before( function() {
-				var stubiate = {
-					executeTransaction: function() {
+				const stubiate = {
+					executeTransaction() {
 						return when.reject( new Error( "Databass not OK" ) );
 					},
 
-					fromFile: function() {}
+					fromFile() {}
 				};
 				hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10 } } );
 			} );
@@ -119,14 +119,14 @@ describe.only( "node-hilo - unit tests", function() {
 		} );
 
 		describe( "with no exception provided", function() {
-			var hilo;
+			let hilo;
 			before( function() {
-				var stubiate = {
-					executeTransaction: function() {
+				const stubiate = {
+					executeTransaction() {
 						return when.reject();
 					},
 
-					fromFile: function() {}
+					fromFile() {}
 				};
 				hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10 } } );
 			} );
@@ -138,20 +138,20 @@ describe.only( "node-hilo - unit tests", function() {
 	} );
 
 	describe( "when the DB doesn't return a valid hival", function() {
-		var hilo, spy, dbHival;
+		let hilo, dbHival;
 		before( function() {
-			var stubiate = {
-				executeTransaction: function() {
+			const stubiate = {
+				executeTransaction() {
 					return {
-						then: function() {
-							return when( { next_hi: dbHival } ); // jshint ignore:line
+						then() {
+							return when( { next_hi: dbHival } ); // eslint-disable-line camelcase
 						}
 					};
 				},
 
-				fromFile: function() {}
+				fromFile() {}
 			};
-			spy = sinon.spy( stubiate, "executeTransaction" );
+			sinon.spy( stubiate, "executeTransaction" );
 			hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10 } } );
 		} );
 
@@ -172,18 +172,18 @@ describe.only( "node-hilo - unit tests", function() {
 	} );
 
 	describe( "when a DB failure is followed by success", function() {
-		var succeed = false;
-		var dbCalls = 0;
-		var hilo;
+		let succeed = false;
+		let dbCalls = 0;
+		let hilo;
 
 		before( function() {
-			var stubiate = {
-				executeTransaction: function() {
+			const stubiate = {
+				executeTransaction() {
 					dbCalls++;
 					return succeed ? getDataStub( 100000 ) : when.reject();
 				},
 
-				fromFile: function() {}
+				fromFile() {}
 			};
 			hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10 } } );
 		} );
@@ -210,25 +210,25 @@ describe.only( "node-hilo - unit tests", function() {
 	} );
 
 	describe( "with DB consistently failing", function() {
-		var succeed = false;
-		var dbCalls = 0;
-		var hilo;
+		let succeed = false;
+		let dbCalls = 0;
+		let hilo;
 
 		before( function() {
-			var stubiate = {
-				executeTransaction: function() {
+			const stubiate = {
+				executeTransaction() {
 					dbCalls++;
 					return succeed ? getDataStub( 100000 ) : when.reject();
 				},
 
-				fromFile: function() {}
+				fromFile() {}
 			};
 			hilo = getHiloInstance( stubiate, { hilo: { maxLo: 10, maxRetryDelay: 100 } } );
 		} );
 
 		it( "should double the retryDelay on failure", function( done ) {
 			succeed = false;
-			var call = 0;
+			let call = 0;
 			function tryNextId() {
 				call++;
 				hilo.nextId().should.be.rejectedWith( /An unknown error has occurred/ ).then( function() {

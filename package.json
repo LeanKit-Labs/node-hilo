@@ -11,15 +11,18 @@
         "type": "git",
         "url": "git://github.com/LeanKit-Labs/node-hilo.git"
     },
-    "contributors": [{
-        "name": "Jim Cowart",
-        "email": "jim@ifandelse.com",
-        "url": "http://ifandelse.com"
-    }, {
-        "name": "Matt Dunlap",
-        "email": "matt.dunlap@leankit.com",
-        "url": "https://github.com/prestaul"
-    }],
+    "contributors": [
+        {
+            "name": "Jim Cowart",
+            "email": "jim@ifandelse.com",
+            "url": "http://ifandelse.com"
+        },
+        {
+            "name": "Matt Dunlap",
+            "email": "matt.dunlap@leankit.com",
+            "url": "https://github.com/prestaul"
+        }
+    ],
     "main": "./src/index.js",
     "keywords": [
         "hilo",
@@ -28,7 +31,13 @@
         "NHibernate"
     ],
     "scripts": {
-        "test": "gulp test"
+        "lint": "eslint --fix ./",
+        "pretest": "npm run lint",
+        "test": "npm run cover",
+        "test:only": "NODE_ENV=test mocha --exit -r spec/setup -R spec 'spec/**/*.spec.js'",
+        "test:watch": "nodemon --exec \"NODE_ENV=test mocha --exit -r spec/setup -R progress 'spec/**/*.spec.js' || true\" -e js,json,sql",
+        "cover": "nyc -r text-summary -r html -- npm run test:only",
+        "cover:show": "open \"file://$PWD/coverage/index.html\""
     },
     "dependencies": {
         "big-integer": "^1.4.4",
@@ -37,34 +46,40 @@
         "when": "^3.7.3"
     },
     "devDependencies": {
-        "biggulp": "^0.2.0",
         "chai": "^2.0.0",
         "chai-as-promised": "^5.0.0",
-        "gulp": "^3.8.8",
-        "gulp-changed": "^1.2.1",
-        "gulp-jscs": "^1.6.0",
-        "gulp-jshint": "^1.11.0",
-        "gulp-util": "~3.0.5",
-        "jshint": "^2.7.0",
-        "jshint-stylish": "^2.0.0",
+        "eslint": "^4.19.1",
+        "eslint-config-leankit": "^4.5.0",
+        "mocha": "^5.2.0",
+        "nodemon": "^1.17.5",
+        "nyc": "^11.8.0",
         "processhost": "^0.2.1",
         "proxyquire": "^1.4.0",
         "seriate": "^0.3.6",
         "sinon": "~1.11.0",
         "sinon-as-promised": "^4.0.0",
-        "sinon-chai": "^2.7.0",
-        "stylish": "^0.6.0",
-        "stylus": "^0.51.1"
+        "sinon-chai": "^2.7.0"
     },
     "engines": {
-        "node": ">=0.10.0"
+        "node": ">=8.0.0"
     },
-    "licenses": [{
-        "type": "MIT",
-        "url": "http://opensource.org/licenses/MIT"
-    }],
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "http://opensource.org/licenses/MIT"
+        }
+    ],
     "files": [
         "src",
         "LICENSE"
-    ]
+    ],
+    "nyc": {
+        "exclude": [
+            "coverage",
+            "spec"
+        ],
+        "sourceMap": false,
+        "instrument": true,
+        "all": true
+    }
 }

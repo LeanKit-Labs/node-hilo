@@ -9,8 +9,8 @@ global.bigInt = require( "big-integer" );
 global.getHiloInstance = require( "../src" );
 
 global.getIds = function getIds( cnt, hilo ) {
-	var p = [];
-	var idx = 0;
+	const p = [];
+	let idx = 0;
 	while ( idx < cnt ) {
 		p.push( hilo.nextId() );
 		idx++;
@@ -19,8 +19,8 @@ global.getIds = function getIds( cnt, hilo ) {
 };
 
 global.getExpected = function getExpected( cnt, startIdx ) {
-	var expected = [];
-	var idx = 0;
+	const expected = [];
+	let idx = 0;
 	if ( startIdx.equals( 0 ) ) {
 		startIdx = startIdx.add( 1 );
 	}

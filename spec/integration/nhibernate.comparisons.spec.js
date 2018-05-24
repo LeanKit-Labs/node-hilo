@@ -4,42 +4,42 @@ var seriate = require( "seriate" );
 
 describe( "node-hilo integration tests", function() {
 	describe( "when compared to a range of 10k NHibernate-generated keys", function() {
-		var comparisons = [
+		const comparisons = [
 			{ file: "../data/nhibernate.hival0.json", hival: "0" },
 			{ file: "../data/nhibernate.hival10000.json", hival: "10000" },
 			{ file: "../data/nhibernate.hival_1trillion.json", hival: "1000000000000" }
 		];
 
 		comparisons.forEach( function( comparison ) {
-			describe( "with a starting hival of " + comparison.hival, function() {
-				var hilo, hival;
+			describe( `with a starting hival of ${ comparison.hival }`, function() {
+				let hilo, hival;
 				before( function() {
 					hival = bigInt( comparison.hival );
-					var stubiate = {
-						executeTransaction: function() {
+					const stubiate = {
+						executeTransaction() {
 							return {
-								then: function() {
-									var val = { next_hi: hival.toString() }; // jshint ignore:line
+								then() {
+									const val = { next_hi: hival.toString() }; // eslint-disable-line camelcase
 									hival = hival.add( 1 );
 									return when( val );
 								}
 							};
 						},
-						fromFile: function() {}
+						fromFile() {}
 					};
 					hilo = getHiloInstance( stubiate, { hilo: { maxLo: 100 } } );
 				} );
 				it( "should match nhibernate's keys exactly", function() {
 					this.timeout( 20000 );
 					return getIds( 10000, hilo ).then( function( ids ) {
-						ids.should.eql( require( comparison.file ).nhibernate_keys ); // jshint ignore:line
+						ids.should.eql( require( comparison.file ).nhibernate_keys );
 					} );
 				} );
 			} );
 		} );
 	} );
 	describe( "when multiple hilo clients are writing against a database (be patient, this could take a bit!)", function() {
-		var nodeClient, cfg;
+		let nodeClient, cfg;
 		before( function() {
 			this.timeout( 600000 );
 			nodeClient = {
@@ -84,8 +84,8 @@ describe( "node-hilo integration tests", function() {
 		} );
 		it( "should let all clients create keys without errors or conflicts", function( done ) {
 			this.timeout( 600000 );
-			var stopped = 0;
-			var running = 0;
+			let stopped = 0;
+			let running = 0;
 			processes.setup( {
 				clientA: nodeClient,
 				clientB: nodeClient,
@@ -102,7 +102,7 @@ describe( "node-hilo integration tests", function() {
 							} ).then( function( data ) {
 								data.cnt.should.equal( handles.length * cfg.test.recordsToCreate );
 								done();
-							}, console.log );
+							}, console.log ); // eslint-disable-line no-console
 						}
 					} );
 				} );

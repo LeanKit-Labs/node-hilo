@@ -21,3 +21,4 @@ build-tmp/
 log/
 coverage/*
 intTestDbCfg.json
+.nyc_output/

@@ -4,7 +4,7 @@ var hilo = require( "../../src" )( seriate, cfg );
 function createZeRecord( i ) {
 	i = i || 1;
 	hilo.nextId().then( function( id ) {
-		var msg = process.pid + " | Saved ZeModel #" + id + " (hival: " + hilo.hival + ") - " + i;
+		const msg = `${ process.pid } | Saved ZeModel #${ id } (hival: ${ hilo.hival }) - ${ i }`;
 		return seriate.execute( cfg.sql, {
 			preparedSql: "INSERT INTO dbo.ZeModel (Id, Text) values (@id, @txt)",
 			params: {
@@ -21,9 +21,9 @@ function createZeRecord( i ) {
 			if ( i < cfg.test.recordsToCreate ) {
 				createZeRecord( ++i );
 			} else {
-				process.exit( 0 );
+				process.exit( 0 ); // eslint-disable-line no-process-exit
 			}
-		}, console.log );
+		}, console.log ); // eslint-disable-line no-console
 	} );
 }
 
