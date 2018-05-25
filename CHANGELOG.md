@@ -1,4 +1,13 @@
 ## 1.0.0
+
+### 1.1.0
+
+* Added nextIds and swapped preparedSql for query.
+* Updated machina
+* Updated lodash
+* Updated dev dependencies.
+* Replaced when with native promises.
+* Replaced gulp, jshint, and jscs with npm scripts and eslint.
 * Made the hilo table name configurable.
 * Updated to biggulp 0.2.0
 
