@@ -73,14 +73,3 @@ If you plan to run the integration tests, you will need access to an MS SQL serv
 	}
 }
 ```
-
-I recommend copying the following into a local file by that name and updating the `sql` information, leaving the rest alone.
-
-* `gulp` to run all tests and format/lint the code
-* `gulp test-behavior` to run only behavior tests
-* `gulp test-int` to run only integration tests
-* `gulp coverage` to run tests with instanbul report in the console
-* `gulp show-coverage` to run tests and show the web istanbul report
-* `gulp format` to run JSCS formatting rules
-* `gulp jshint` to lint the code
-
