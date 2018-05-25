@@ -48,9 +48,9 @@ var HiLoFsm = machina.Fsm.extend( {
 		},
 		dbFailure: {
 			_onEnter() {
-				this.timer = setTimeout( function() {
+				this.timer = setTimeout( () => {
 					this.handle( "clearErrorState" );
-				}.bind( this ), this.retryDelay );
+				}, this.retryDelay );
 				this.retryDelay = Math.min( this.retryDelay * 2, this.maxRetryDelay );
 			},
 			clearErrorState: "uninitialized",
@@ -73,14 +73,14 @@ var HiLoFsm = machina.Fsm.extend( {
 	},
 
 	nextId() {
-		return new Promise( function( resolve, reject ) {
-			this.handle( "nextId", function( err, val ) {
+		return new Promise( ( resolve, reject ) => {
+			this.handle( "nextId", ( err, val ) => {
 				if ( err ) {
 					return reject( err );
 				}
 				resolve( val );
 			} );
-		}.bind( this ) );
+		} );
 	}
 } );
 
@@ -92,13 +92,13 @@ module.exports = function( seriate, config ) {
 			this.retryDelay = 1;
 			this.table = config.hilo.table || "dbo.hibernate_unique_key";
 
-			const preparedSql = _.template( seriate.fromFile( "./sql/nexthi.sql" ) )( {
+			const query = _.template( seriate.fromFile( "./sql/nexthi.sql" ) )( {
 				TABLE: this.table
 			} );
 
 			this.getNextHival = function() {
 				return seriate.executeTransaction( config.sql, {
-					preparedSql
+					query
 				} ).then( function( data ) {
 					return data.transaction.commit()
 						.then( function() {
@@ -112,6 +112,9 @@ module.exports = function( seriate, config ) {
 	const hilo = {
 		nextId() {
 			return hiloFsm.nextId();
+		},
+		nextIds( count ) {
+			return Promise.all( _.times( count, () => { return hiloFsm.nextId(); } ) );
 		}
 	};
 

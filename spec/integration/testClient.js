@@ -6,7 +6,7 @@ function createZeRecord( i ) {
 	hilo.nextId().then( function( id ) {
 		const msg = `${ process.pid } | Saved ZeModel #${ id } (hival: ${ hilo.hival }) - ${ i }`;
 		return seriate.execute( cfg.sql, {
-			preparedSql: "INSERT INTO dbo.ZeModel (Id, Text) values (@id, @txt)",
+			query: "INSERT INTO dbo.ZeModel (Id, Text) values (@id, @txt)",
 			params: {
 				id: {
 					type: seriate.BigInt,

@@ -39,7 +39,7 @@ describe.only( "node-hilo - unit tests", function() {
 		} );
 
 		it( "should call execute with the correct sql query", function() {
-			const sql = seriate.executeTransaction.getCall( 0 ).args[ 1 ].preparedSql;
+			const sql = seriate.executeTransaction.getCall( 0 ).args[ 1 ].query;
 			sql.should.equal( "\nSELECT [next_hi]\nFROM dbo.HILO_TABLE WITH(rowlock,updlock);\nUPDATE dbo.HILO_TABLE\nSET [next_hi] = [next_hi] + 1\n" );
 		} );
 
@@ -81,7 +81,7 @@ describe.only( "node-hilo - unit tests", function() {
 						} );
 
 						it( "should return expected ids for the given range", function() {
-							return getIds( idCount, hilo ).then( function( ids ) {
+							return hilo.nextIds( idCount ).then( function( ids ) {
 								ids.should.eql( getExpected( idCount, ( startHival.times( maxLoPlusOne ) ) ) );
 
 								if ( idCount > 0 ) {

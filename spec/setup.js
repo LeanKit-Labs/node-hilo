@@ -6,16 +6,6 @@ global.sinon = require( "sinon" );
 global.bigInt = require( "big-integer" );
 global.getHiloInstance = require( "../src" );
 
-global.getIds = function getIds( cnt, hilo ) {
-	const p = [];
-	let idx = 0;
-	while ( idx < cnt ) {
-		p.push( hilo.nextId() );
-		idx++;
-	}
-	return Promise.all( p );
-};
-
 global.getExpected = function getExpected( cnt, startIdx ) {
 	const expected = [];
 	let idx = 0;

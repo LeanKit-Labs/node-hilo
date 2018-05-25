@@ -31,7 +31,7 @@ describe( "node-hilo integration tests", function() {
 				} );
 				it( "should match nhibernate's keys exactly", function() {
 					this.timeout( 20000 );
-					return getIds( 10000, hilo ).then( function( ids ) {
+					return hilo.nextIds( 10000 ).then( function( ids ) {
 						ids.should.eql( require( comparison.file ).nhibernate_keys );
 					} );
 				} );
@@ -65,7 +65,7 @@ describe( "node-hilo integration tests", function() {
 						query: seriate.fromFile( "./ZeModelTable-Create.sql" )
 					} )
 					.step( "StartingHival", {
-						preparedSql: "INSERT INTO hibernate_unique_key SELECT @hival",
+						query: "INSERT INTO hibernate_unique_key SELECT @hival",
 						params: {
 							hival: {
 								type: seriate.BIGINT,

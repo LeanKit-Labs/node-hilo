@@ -12,7 +12,6 @@ module.exports = {
 		sinon: true,
 		bigInt: true,
 		should: true,
-		getIds: true,
 		getExpected: true,
 		getHiloInstance: true
 	}
