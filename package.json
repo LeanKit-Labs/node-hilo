@@ -40,23 +40,23 @@
         "cover:show": "open \"file://$PWD/coverage/index.html\""
     },
     "dependencies": {
-        "big-integer": "^1.4.4",
-        "lodash": "^4.17.10",
-        "machina": "^2.0.2"
+        "big-integer": "^1.6.40",
+        "lodash": "^4.17.11",
+        "machina": "^4.0.2",
+        "tedious": "^4.1.1"
     },
     "devDependencies": {
-        "chai": "^4.1.2",
+        "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
         "eslint": "^4.19.1",
         "eslint-config-leankit": "^4.5.0",
         "mocha": "^5.2.0",
-        "nodemon": "^1.17.5",
-        "nyc": "^11.8.0",
+        "nodemon": "^1.18.7",
+        "nyc": "^11.9.0",
         "processhost": "^0.2.1",
-        "proxyquire": "^2.0.1",
-        "seriate": "^0.13.1",
-        "sinon": "^5.0.10",
-        "sinon-chai": "^3.1.0"
+        "proxyquire": "^2.1.0",
+        "sinon": "^5.1.1",
+        "sinon-chai": "^3.3.0"
     },
     "engines": {
         "node": ">=8.0.0"

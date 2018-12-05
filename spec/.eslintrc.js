@@ -13,6 +13,6 @@ module.exports = {
 		bigInt: true,
 		should: true,
 		getExpected: true,
-		getHiloInstance: true
+		proxyquire: true
 	}
 };
