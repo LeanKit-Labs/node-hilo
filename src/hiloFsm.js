@@ -27,7 +27,6 @@ module.exports = ( { sql, hilo: { maxLo = 100, maxRetryDelay = 5000, table = "db
 						}
 						resolve( _.get( results, [ "0", "next_hi", "value" ] ) );
 					} );
-
 					this.connection.execSql( request );
 				} );
 			};

@@ -1,7 +1,10 @@
 var chai = require( "chai" );
 chai.use( require( "sinon-chai" ) );
 chai.use( require( "chai-as-promised" ) );
+chai.use( require( "dirty-chai" ) );
 global.should = chai.should();
+global.expect = chai.expect;
+chai.use( require( "dirty-chai" ) );
 global.sinon = require( "sinon" );
 global.bigInt = require( "big-integer" );
 global.proxyquire = require( "proxyquire" );
