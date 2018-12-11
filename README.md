@@ -6,7 +6,7 @@ NHibernate-style hi/lo ID generator for node.js
 
 ### Requiring & Configuring
 
-node-hilo exports a factory function that takes an instance of [seriate](https://github.com/leankit-labs/seriate), and a configuration object:
+node-hilo exports a factory function that takes a configuration object:
 ```javascript
 /*
 	The configuration argument can contain the following:
@@ -23,23 +23,18 @@ node-hilo exports a factory function that takes an instance of [seriate](https:/
 		}
 	}
 */
-var hilo = require( "node-hilo" )( seriate, configuration );
+var hilo = require( "node-hilo" )( configuration );
 ```
 
 ### How to Use
 
-node-hilo exports two module members: a `nextId` method and a read-only property called `hival`. You will likely *never* need to care about the `hival` value - it's there for diagnostics and testing. The `nextId` method returns a promise, with the newly generated ID being passed to the success callback:
+node-hilo exports three module members: a `nextId` method, a `nextIds` method and a read-only property called `hival`. You will likely *never* need to care about the `hival` value - it's there for diagnostics and testing. The `nextId` method returns a promise, with the newly generated ID being passed to the success callback:
 
 ```javascript
-hilo.nextId(
-	function( id ){
-		// Now you can use the id on your object, etc.
-		api.saveNewThing( id, newThing );
-	},
-	function( err) {
-		console.log( "O NOES!", err );
-	}
-);
+const id = await hilo.nextId();
+
+// block of 100 ids
+const ids = await hilo.nextIds( 100 )
 ```
 
 ## The More You Know...

@@ -1,8 +1,16 @@
-require( "../setup" );
-var processes = require( "processhost" )();
-var seriate = require( "seriate" );
+const processes = require( "processhost" )();
+const config = require( "./intTestDbCfg.json" );
+const hiloFactory = require( "../../src" );
+const fs = require( "fs" );
+const path = require( "path" );
+const execQuery = require( "./execQuery" )( config );
 
 describe( "node-hilo integration tests", function() {
+	beforeEach( async () => {
+		const sql = fs.readFileSync( path.join( __dirname, "dbSetup.sql" ), "UTF8" );
+		await execQuery( sql );
+	} );
+
 	describe( "when compared to a range of 10k NHibernate-generated keys", function() {
 		const comparisons = [
 			{ file: "../data/nhibernate.hival0.json", hival: "0" },
@@ -12,34 +20,24 @@ describe( "node-hilo integration tests", function() {
 
 		comparisons.forEach( function( comparison ) {
 			describe( `with a starting hival of ${ comparison.hival }`, function() {
-				let hilo, hival;
-				before( function() {
-					hival = bigInt( comparison.hival );
-					const stubiate = {
-						executeTransaction() {
-							return {
-								then() {
-									const val = { next_hi: hival.toString() }; // eslint-disable-line camelcase
-									hival = hival.add( 1 );
-									return Promise.resolve( val );
-								}
-							};
-						},
-						fromFile() {}
-					};
-					hilo = getHiloInstance( stubiate, { hilo: { maxLo: 100 } } );
+				let hilo;
+				beforeEach( async () => {
+					const query = `UPDATE dbo.hibernate_unique_key WITH(rowlock,updlock) SET next_hi = ${ comparison.hival }`;
+					await execQuery( query );
+					hilo = hiloFactory( config );
 				} );
-				it( "should match nhibernate's keys exactly", function() {
+
+				it( "should match nhibernate's keys exactly", async function() {
 					this.timeout( 20000 );
-					return hilo.nextIds( 10000 ).then( function( ids ) {
-						ids.should.eql( require( comparison.file ).nhibernate_keys );
-					} );
+					const ids = await hilo.nextIds( 10000 );
+					ids.should.eql( require( comparison.file ).nhibernate_keys );
 				} );
 			} );
 		} );
 	} );
+
 	describe( "when multiple hilo clients are writing against a database (be patient, this could take a bit!)", function() {
-		let nodeClient, cfg;
+		let nodeClient;
 		before( function() {
 			this.timeout( 600000 );
 			nodeClient = {
@@ -49,39 +47,8 @@ describe( "node-hilo integration tests", function() {
 				start: true,
 				restart: false
 			};
-			cfg = require( "./intTestDbCfg.json" );
-			return new Promise( function( resolve, reject ) {
-				seriate.getTransactionContext( cfg.sql )
-					.step( "drop-hibernate_unique_key", {
-						query: seriate.fromFile( "./NhibernateTable-Drop.sql" )
-					} )
-					.step( "create-hibernate_unique_key", {
-						query: seriate.fromFile( "./NhibernateTable-Create.sql" )
-					} )
-					.step( "drop-ZeModel", {
-						query: seriate.fromFile( "./ZeModelTable-Drop.sql" )
-					} )
-					.step( "create-ZeModel", {
-						query: seriate.fromFile( "./ZeModelTable-Create.sql" )
-					} )
-					.step( "StartingHival", {
-						query: "INSERT INTO hibernate_unique_key SELECT @hival",
-						params: {
-							hival: {
-								type: seriate.BIGINT,
-								val: cfg.test.startingHiVal
-							}
-						}
-					} )
-					.end( function( result ) {
-						result.transaction.commit()
-							.then( resolve, reject );
-					} )
-					.error( function( err ) {
-						reject( err );
-					} );
-			} );
 		} );
+
 		it( "should let all clients create keys without errors or conflicts", function( done ) {
 			this.timeout( 600000 );
 			let stopped = 0;
@@ -89,7 +56,10 @@ describe( "node-hilo integration tests", function() {
 			processes.setup( {
 				clientA: nodeClient,
 				clientB: nodeClient,
-				clientC: nodeClient
+				clientC: nodeClient,
+				clientD: nodeClient,
+				clientE: nodeClient,
+				clientF: nodeClient
 			} ).then( function( handles ) {
 				running = handles.length;
 				handles.forEach( function( handle ) {
@@ -97,12 +67,11 @@ describe( "node-hilo integration tests", function() {
 						handle.stop();
 						stopped++;
 						if ( stopped === running ) {
-							seriate.first( cfg.sql, {
-								query: "SELECT COUNT(DISTINCT ID) AS cnt FROM ZeModel"
-							} ).then( function( data ) {
-								data.cnt.should.equal( handles.length * cfg.test.recordsToCreate );
+							execQuery( "SELECT COUNT(DISTINCT ID) AS cnt FROM ZeModel" ).then( results => {
+								const numberOfRows = results[ 0 ].cnt.value;
+								numberOfRows.should.equal( handles.length * config.test.recordsToCreate );
 								done();
-							}, console.log ); // eslint-disable-line no-console
+							}, console.log ); /* eslint-disable-line no-console */
 						}
 					} );
 				} );

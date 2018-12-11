@@ -1,21 +1,10 @@
 var chai = require( "chai" );
 chai.use( require( "sinon-chai" ) );
 chai.use( require( "chai-as-promised" ) );
+chai.use( require( "dirty-chai" ) );
 global.should = chai.should();
+global.expect = chai.expect;
+chai.use( require( "dirty-chai" ) );
 global.sinon = require( "sinon" );
 global.bigInt = require( "big-integer" );
-global.getHiloInstance = require( "../src" );
-
-global.getExpected = function getExpected( cnt, startIdx ) {
-	const expected = [];
-	let idx = 0;
-	if ( startIdx.equals( 0 ) ) {
-		startIdx = startIdx.add( 1 );
-	}
-	while ( idx < cnt ) {
-		expected.push( startIdx.toString() );
-		startIdx = startIdx.add( 1 );
-		idx++;
-	}
-	return expected;
-};
+global.proxyquire = require( "proxyquire" );
