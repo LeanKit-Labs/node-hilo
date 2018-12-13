@@ -1,3 +1,9 @@
+## 2.x
+
+### 2.0.0
+
+* Removed dependency on seriate. Now uses tedious directly.
+
 ## 1.0.0
 
 ### 1.1.0
