@@ -35,7 +35,8 @@ module.exports = config => {
 			encrypt,
 			rowCollectionOnRequestCompletion: true,
 			useColumnNames: true,
-			abortTransactionOnError: true
+			abortTransactionOnError: true,
+			enableArithAbort: false
 		}
 	};
 };
