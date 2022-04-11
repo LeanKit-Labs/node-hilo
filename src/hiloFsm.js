@@ -2,7 +2,7 @@
 
 const machina = require( "machina" );
 const bigInt = require( "big-integer" );
-const { Connection, Request } = require( "tedious" );
+const tedious = require( "tedious" );
 const HiloGenerationError = require( "./HiloGenerationError" );
 const fs = require( "fs" );
 const path = require( "path" );
@@ -21,7 +21,7 @@ module.exports = ( { sql, hilo: { maxLo = 100, maxRetryDelay = 5000, table = "db
 
 			this.getNextHival = function() {
 				return new Promise( ( resolve, reject ) => {
-					const request = new Request( query, ( requestError, rowCount, results ) => {
+					const request = new tedious.Request( query, ( requestError, rowCount, results ) => {
 						if ( requestError ) {
 							return reject( requestError );
 						}
@@ -57,7 +57,7 @@ module.exports = ( { sql, hilo: { maxLo = 100, maxRetryDelay = 5000, table = "db
 			connecting: {
 				_onEnter() {
 					try {
-						this.connection = new Connection( tediousConfig );
+						this.connection = new tedious.Connection( tediousConfig );
 						this.connection.once( "connect", connError => {
 							if ( connError ) {
 								this.err = connError;

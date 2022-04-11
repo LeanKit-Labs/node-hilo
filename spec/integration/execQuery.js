@@ -15,7 +15,8 @@ module.exports = config => {
 				database: config.sql.database,
 				encrypt: false,
 				useColumnNames: true,
-				rowCollectionOnRequestCompletion: true
+				rowCollectionOnRequestCompletion: true,
+				enableArithAbort: false
 			}
 		} );
 		conn.on( "connect", err => {

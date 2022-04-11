@@ -34,7 +34,8 @@ describe( "createTediousConfig", () => {
 				encrypt: "ENCRYPT",
 				rowCollectionOnRequestCompletion: true,
 				useColumnNames: true,
-				abortTransactionOnError: true
+				abortTransactionOnError: true,
+				enableArithAbort: false
 			}
 		} );
 	} );
