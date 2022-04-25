@@ -1,3 +1,9 @@
+## 3.x
+
+### 3.0.0
+
+* Bumped to node 16, updated deps, added type definition
+
 ## 2.x
 
 ### 2.0.0
