@@ -1,5 +1,9 @@
 ## 3.x
 
+### 3.0.1
+
+* Updated dev dependencies
+
 ### 3.0.0
 
 * Bumped to node 16, updated deps, added type definition
