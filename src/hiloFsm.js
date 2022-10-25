@@ -71,6 +71,7 @@ module.exports = ( { sql, hilo: { maxLo = 100, maxRetryDelay = 5000, table = "db
 							} );
 							this.handle( "connectionSuccess" );
 						} );
+						this.connection.connect();
 					} catch ( e ) {
 						this.err = e;
 						this.handle( "connectionFailure" );

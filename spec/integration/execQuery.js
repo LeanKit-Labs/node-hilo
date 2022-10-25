@@ -25,6 +25,7 @@ module.exports = config => {
 			}
 			resolve( conn );
 		} );
+		conn.connect();
 	} );
 
 	return async query => {
