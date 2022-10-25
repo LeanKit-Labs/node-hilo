@@ -15,5 +15,8 @@ module.exports = {
 		getExpected: true,
 		proxyquire: true,
 		expect: true
+	},
+	parserOptions: {
+		ecmaVersion: 2020
 	}
 };

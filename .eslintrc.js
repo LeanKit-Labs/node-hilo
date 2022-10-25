@@ -8,6 +8,6 @@ module.exports = {
 		"no-magic-numbers": 0
 	},
 	parserOptions: {
-		ecmaVersion: 2017
+		ecmaVersion: 2020
 	}
 };
