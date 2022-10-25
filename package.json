@@ -40,17 +40,16 @@
         "cover:show": "open \"file://$PWD/coverage/index.html\""
     },
     "dependencies": {
-        "big-integer": "^1.6.40",
-        "lodash": "^4.17.11",
+        "big-integer": "^1.6.51",
+        "lodash": "^4.17.21",
         "machina": "^4.0.2",
-        "tedious": "^6.7.0"
+        "tedious": "^6.7.1"
     },
     "devDependencies": {
         "chai": "^4.3.6",
         "chai-as-promised": "^7.1.1",
         "dirty-chai": "^2.0.1",
-        "eslint": "^6.6.0",
-        "eslint-config-leankit": "^5.1.0",
+        "eslint-config-leankit": "^6.0.0",
         "mocha": "^10.1.0",
         "nodemon": "^2.0.20",
         "nyc": "^15.1.0",
