@@ -7,7 +7,6 @@ const HiloGenerationError = require( "./HiloGenerationError" );
 const fs = require( "fs" );
 const path = require( "path" );
 const createTediousConfig = require( "./createTediousConfig" );
-const _ = require( "lodash" );
 
 module.exports = ( { sql, hilo: { maxLo = 100, maxRetryDelay = 5000, table = "dbo.hibernate_unique_key" } = {} } ) => {
 	const tediousConfig = createTediousConfig( sql );
@@ -15,17 +14,15 @@ module.exports = ( { sql, hilo: { maxLo = 100, maxRetryDelay = 5000, table = "db
 
 	var fsm = new machina.Fsm( {
 		initialize() {
-			const query = _.template( fs.readFileSync( path.join( __dirname, "/sql/nexthi.sql" ) ) )( {
-				TABLE: table
-			} );
-
+			const query = fs.readFileSync( path.join( __dirname, "/sql/nexthi.sql" ), "utf8" ).replace( /{{TABLE}}/g, table );
 			this.getNextHival = function() {
 				return new Promise( ( resolve, reject ) => {
 					const request = new tedious.Request( query, ( requestError, rowCount, results ) => {
 						if ( requestError ) {
 							return reject( requestError );
 						}
-						resolve( _.get( results, [ "0", "next_hi", "value" ] ) );
+						const [ { next_hi: { value } } ] = results;
+						resolve( value );
 					} );
 					this.connection.execSql( request );
 				} );
