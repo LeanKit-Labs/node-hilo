@@ -1,4 +1,3 @@
-const _ = require( "lodash" );
 
 const hiLoFsm = require( "./hiloFsm" );
 
@@ -9,8 +8,8 @@ module.exports = config => {
 		nextId() {
 			return hiloFsm.nextId();
 		},
-		nextIds( count ) {
-			return Promise.all( _.times( count, () => { return hiloFsm.nextId(); } ) );
+		nextIds( length ) {
+			return Promise.all( Array.from( { length }, () => hiloFsm.nextId() ) );
 		}
 	};
 

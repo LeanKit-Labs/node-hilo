@@ -16,6 +16,7 @@ describe( "hiloFsm", () => {
 	beforeEach( () => {
 		bigInt = sinon.stub();
 		connInstance = {
+			connect: sinon.stub(),
 			once: sinon.stub(),
 			execSql: sinon.stub()
 		};
@@ -101,6 +102,9 @@ describe( "hiloFsm", () => {
 				it( "should listen (once) to a 'connect' event", () => {
 					connInstance.once.should.be.calledOnce
 						.and.calledWithMatch( "connect", sinon.match.func );
+				} );
+				it( "should listen (once) to a 'connect' event", () => {
+					connInstance.connect.should.be.calledOnce();
 				} );
 
 				describe( "when connecting fails", () => {

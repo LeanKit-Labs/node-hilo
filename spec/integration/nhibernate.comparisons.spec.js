@@ -1,4 +1,3 @@
-const processes = require( "processhost" )();
 const config = require( "./intTestDbCfg.json" );
 const hiloFactory = require( "../../src" );
 const fs = require( "fs" );
@@ -37,45 +36,15 @@ describe( "node-hilo integration tests", function() {
 	} );
 
 	describe( "when multiple hilo clients are writing against a database (be patient, this could take a bit!)", function() {
-		let nodeClient;
-		before( function() {
+		it( "should let all clients create keys without errors or conflicts", async function( ) {
 			this.timeout( 600000 );
-			nodeClient = {
-				command: "node",
-				args: [ "./spec/integration/testClient.js" ],
-				restartLimit: false,
-				start: true,
-				restart: false
-			};
-		} );
+			const { execa } = await import( "execa" );
+			const clients = Array.from( { length: 6 }, () => execa( "node", [ "./spec/integration/testClient.js" ] ) );
+			await Promise.all( clients );
 
-		it( "should let all clients create keys without errors or conflicts", function( done ) {
-			this.timeout( 600000 );
-			let stopped = 0;
-			let running = 0;
-			processes.setup( {
-				clientA: nodeClient,
-				clientB: nodeClient,
-				clientC: nodeClient,
-				clientD: nodeClient,
-				clientE: nodeClient,
-				clientF: nodeClient
-			} ).then( function( handles ) {
-				running = handles.length;
-				handles.forEach( function( handle ) {
-					handle.on( "crashed", function() {
-						handle.stop();
-						stopped++;
-						if ( stopped === running ) {
-							execQuery( "SELECT COUNT(DISTINCT ID) AS cnt FROM ZeModel" ).then( results => {
-								const numberOfRows = results[ 0 ].cnt.value;
-								numberOfRows.should.equal( handles.length * config.test.recordsToCreate );
-								done();
-							}, console.log ); /* eslint-disable-line no-console */
-						}
-					} );
-				} );
-			} );
+			const results = await execQuery( "SELECT COUNT(DISTINCT ID) AS cnt FROM ZeModel" );
+			const numberOfRows = results[ 0 ].cnt.value;
+			numberOfRows.should.equal( clients.length * config.test.recordsToCreate );
 		} );
 	} );
 } );
