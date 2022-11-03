@@ -1,3 +1,13 @@
+## 4.x
+
+### 4.0.0
+
+* Goodbye lodash. 👋
+* Update tedious
+* Remove processhost
+* Update deps
+* Update to latest node version
+
 ## 3.x
 
 ### 3.0.1
