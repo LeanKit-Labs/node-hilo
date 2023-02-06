@@ -15,7 +15,8 @@ describe( "createTediousConfig", () => {
 			database: "DATABASE",
 			connectTimeout: "CONNECTTIMEOUT",
 			requestTimeout: "REQUESTTIMEOUT",
-			encrypt: "ENCRYPT"
+			encrypt: "ENCRYPT",
+			multiSubnetFailover: "MULTISUBNETFAILOVER"
 		} ).should.eql( {
 			server: "SERVER",
 			authentication: {
@@ -32,6 +33,7 @@ describe( "createTediousConfig", () => {
 				connectTimeout: "CONNECTTIMEOUT",
 				requestTimeout: "REQUESTTIMEOUT",
 				encrypt: "ENCRYPT",
+				multiSubnetFailover: "MULTISUBNETFAILOVER",
 				rowCollectionOnRequestCompletion: true,
 				useColumnNames: true,
 				abortTransactionOnError: true,

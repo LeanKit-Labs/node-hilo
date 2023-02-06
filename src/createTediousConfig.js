@@ -15,7 +15,8 @@ module.exports = config => {
 		database,
 		connectTimeout = DEFAULT_CONNECT_TIMEOUT,
 		requestTimeout = DEFAULT_REQUEST_TIMEOUT,
-		encrypt = false
+		encrypt = false,
+		multiSubnetFailover = true
 	} = config;
 	return {
 		server: server ? server : host,
@@ -33,6 +34,7 @@ module.exports = config => {
 			connectTimeout,
 			requestTimeout,
 			encrypt,
+			multiSubnetFailover,
 			rowCollectionOnRequestCompletion: true,
 			useColumnNames: true,
 			abortTransactionOnError: true,
