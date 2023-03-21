@@ -1,3 +1,10 @@
+## 5.x
+
+### 5.0.0
+
+* 5.0.0-multiSubnetFailover.0
+* Default multiSubnetFailover to true.
+
 ## 4.x
 
 ### 4.0.0
