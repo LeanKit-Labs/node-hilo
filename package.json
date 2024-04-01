@@ -36,7 +36,7 @@
         "test": "npm run cover",
         "test:only": "NODE_ENV=test mocha --exit -r spec/setup -R spec 'spec/**/*.spec.js'",
         "test:watch": "nodemon --exec \"NODE_ENV=test mocha --exit -r spec/setup -R progress 'spec/**/*.spec.js' || true\" -e js,json,sql",
-        "cover": "nyc -r text-summary -r html -- npm run test:only",
+        "cover": "c8 -r text-summary -r html -- npm run test:only",
         "cover:show": "open \"file://$PWD/coverage/index.html\""
     },
     "dependencies": {
@@ -45,6 +45,7 @@
         "tedious": "^18.1.0"
     },
     "devDependencies": {
+        "c8": "^9.1.0",
         "chai": "^4.3.6",
         "chai-as-promised": "^7.1.1",
         "dirty-chai": "^2.0.1",
@@ -52,7 +53,6 @@
         "execa": "^6.1.0",
         "mocha": "^10.1.0",
         "nodemon": "^2.0.20",
-        "nyc": "^15.1.0",
         "proxyquire": "^2.1.3",
         "sinon": "^14.0.1",
         "sinon-chai": "^3.7.0"
@@ -70,11 +70,12 @@
         "src",
         "LICENSE"
     ],
-    "nyc": {
+    "c8": {
         "exclude": [
             "coverage",
             "spec",
-            ".eslintrc.js"
+            ".eslintrc.js",
+            "index.d.ts"
         ],
         "sourceMap": false,
         "instrument": true,
