@@ -1,3 +1,9 @@
+## 6.x
+
+### 6.0.0
+
+* Feature update node, tedious, and dev dependencies (#17)
+
 ## 5.x
 
 ### 5.0.0
