@@ -1,5 +1,8 @@
 ## 6.x
 
+### 6.0.1
+* Update dependencies.
+
 ### 6.0.0
 
 * Feature update node, tedious, and dev dependencies (#17)
