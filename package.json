@@ -42,7 +42,7 @@
 	"dependencies": {
 		"big-integer": "^1.6.52",
 		"machina": "^4.0.2",
-		"tedious": "^19.0.0"
+		"tedious": "^19.2.0"
 	},
 	"devDependencies": {
 		"c8": "^10.1.3",
