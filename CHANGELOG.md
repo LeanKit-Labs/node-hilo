@@ -1,5 +1,9 @@
 ## 6.x
 
+### 6.1.0
+
+* Update tedious to 19.2.0, force update jws to 4.0.1
+
 ### 6.0.1
 * Update dependencies.
 
