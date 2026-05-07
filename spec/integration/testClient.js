@@ -8,9 +8,9 @@ async function createZeRecord( i = 1 ) {
 
 	await execQuery( `INSERT INTO dbo.ZeModel (Id, Text) values (${ id }, '${ msg }')` );
 	if ( i < config.test.recordsToCreate ) {
-		await createZeRecord( ++i );
+		await createZeRecord( i + 1 ); 
 	} else {
-		process.exit( 0 ); // eslint-disable-line no-process-exit
+		process.exit( 0 );  
 	}
 }
 

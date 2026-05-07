@@ -5,7 +5,7 @@ const path = require( "path" );
 const execQuery = require( "./execQuery" )( config );
 
 describe( "node-hilo integration tests", function() {
-	beforeEach( async () => {
+	beforeEach( async function() {
 		const sql = fs.readFileSync( path.join( __dirname, "dbSetup.sql" ), "UTF8" );
 		await execQuery( sql );
 	} );
@@ -16,11 +16,13 @@ describe( "node-hilo integration tests", function() {
 			{ file: "../data/nhibernate.hival10000.json", hival: "10000" },
 			{ file: "../data/nhibernate.hival_1trillion.json", hival: "1000000000000" }
 		];
-
+		// eslint-disable-next-line mocha/no-setup-in-describe
 		comparisons.forEach( function( comparison ) {
+			// eslint-disable-next-line mocha/no-setup-in-describe
 			describe( `with a starting hival of ${ comparison.hival }`, function() {
 				let hilo;
-				beforeEach( async () => {
+
+				beforeEach( async function() {
 					const query = `UPDATE dbo.hibernate_unique_key WITH(rowlock,updlock) SET next_hi = ${ comparison.hival }`;
 					await execQuery( query );
 					hilo = hiloFactory( config );

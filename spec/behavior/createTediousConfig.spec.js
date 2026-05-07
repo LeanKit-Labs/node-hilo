@@ -1,10 +1,11 @@
-describe( "createTediousConfig", () => {
+describe( "createTediousConfig", function() {
 	let subject;
-	beforeEach( () => {
+
+	beforeEach( function() {
 		subject = require( "../../src/createTediousConfig" );
 	} );
 
-	it( "should set all properties", () => {
+	it( "should set all properties", function() {
 		subject( {
 			user: "USER",
 			password: "PASSWORD",
@@ -42,11 +43,11 @@ describe( "createTediousConfig", () => {
 		} );
 	} );
 
-	it( "should set the auth to default when domain is not provided", () => {
+	it( "should set the auth to default when domain is not provided", function() {
 		subject( {} ).authentication.type.should.eql( "default" );
 	} );
 
-	it( "should set the server name from the host when server is not provided", () => {
+	it( "should set the server name from the host when server is not provided", function() {
 		subject( { host: "HOST" } ).server.should.eql( "HOST" );
 	} );
 } );

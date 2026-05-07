@@ -1,16 +1,16 @@
-describe( "HiloGenerationError", () => {
+describe( "HiloGenerationError", function() {
 	let subject;
 
-	beforeEach( () => {
+	beforeEach( function() {
 		const HiloGenerationError = require( "../../src/HiloGenerationError" );
 		subject = new HiloGenerationError( "MESSAGE" );
 	} );
 
-	it( "should set the error message", () => {
+	it( "should set the error message", function() {
 		subject.message.should.eql( "MESSAGE" );
 	} );
 
-	it( "should set the error name", () => {
+	it( "should set the error name", function() {
 		subject.name.should.eql( "HiloGenerationError" );
 	} );
 } );
